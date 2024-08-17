@@ -102,9 +102,7 @@ Public Class VPNMonitor
 
     Private m_icoOn As Icon
     Private m_icoOff As Icon
-    Private connectionName As String
-
-    Private VPN_Name As String = ConfigurationManager.AppSettings("VPN_Name")
+    Private connectionName As String = ConfigurationManager.AppSettings("ConnectionName")
 
     Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         m_icoOn = My.Resources.green
@@ -137,8 +135,7 @@ Public Class VPNMonitor
             Application.Exit()
         Else
             For Each netadapter As NetworkInterface In nics
-                If netadapter.Name = VPN_Name Then
-                    connectionName = netadapter.Name
+                If netadapter.Name = connectionName Then
                     Me.mnuOff.Enabled = True
                     Me.mnuOn.Enabled = False
                     Me.NotifyIcon1.Icon = m_icoOn

@@ -1,4 +1,5 @@
 Imports System.Net.NetworkInformation
+Imports System.Configuration
 Imports System.Windows.Forms.VisualStyles.VisualStyleElement.Menu
 
 Public Class VPNMonitor
@@ -88,9 +89,10 @@ Public Class VPNMonitor
         '
         Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
         Me.ClientSize = New System.Drawing.Size(292, 77)
-        Me.Name = "Form1"
+        Me.Name = "VPN Monitor"
         Me.ShowInTaskbar = False
-        Me.Text = "Form1"
+        Me.FormBorderStyle = FormBorderStyle.SizableToolWindow
+        Me.Text = "VPN Monitor"
         Me.WindowState = System.Windows.Forms.FormWindowState.Minimized
         Me.ResumeLayout(False)
 
@@ -100,6 +102,9 @@ Public Class VPNMonitor
 
     Private m_icoOn As Icon
     Private m_icoOff As Icon
+    Private connectionName As String
+
+    Private VPN_Name As String = ConfigurationManager.AppSettings("VPN_Name")
 
     Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         m_icoOn = My.Resources.green
@@ -125,13 +130,15 @@ Public Class VPNMonitor
     End Sub
 
     Private Function Check_VPN() As Boolean
+
         Dim nics As NetworkInterface() = NetworkInterface.GetAllNetworkInterfaces
         If nics.Length < 0 Or nics Is Nothing Then
             MsgBox("NO NETWORK CONNECTIONS")
             Application.Exit()
         Else
             For Each netadapter As NetworkInterface In nics
-                If netadapter.Name = "VPN" Then
+                If netadapter.Name = VPN_Name Then
+                    connectionName = netadapter.Name
                     Me.mnuOff.Enabled = True
                     Me.mnuOn.Enabled = False
                     Me.NotifyIcon1.Icon = m_icoOn
@@ -154,7 +161,7 @@ Public Class VPNMonitor
         TmrCheckVPN.Start()
 
         Dim argVPN As String
-        argVPN = "VPN"
+        argVPN = Chr(34) + connectionName + Chr(34)
 
         If OnOff = "Off" Then
             argVPN = argVPN + " /disconnect"

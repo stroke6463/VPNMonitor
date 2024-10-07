@@ -105,6 +105,8 @@ Public Class VPNMonitor
     Private connectionName As String = ConfigurationManager.AppSettings("ConnectionName")
 
     Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        Me.Hide()
+
         m_icoOn = My.Resources.green
         m_icoOff = My.Resources.red
 
